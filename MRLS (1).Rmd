@@ -1,0 +1,191 @@
+---
+title: "MRLS"
+author: "Melanie Cruz Camacho"
+date: "2023-12-25"
+output: pdf_document
+---
+
+ ___________ Modelo de Regresión lineal simple _______
+
+#------------------------------------
+#   Lectura de matriz de datos
+#------------------------------------
+
+# Exportar la matriz penguins.xlsx
+#1.- Instalación de la paquetería "ggplot2"
+
+```{r}
+install.packages("ggplot2")
+```
+
+#2.-Abrimos librería
+
+```{r}
+library(ggplot2)
+```
+
+
+#----------------------------------------
+#  Exploracion de la matriz
+#----------------------------------------
+
+# 2.- Dimensión de la matriz
+```{r}
+dim(Penguins)
+```
+
+
+# 3.- Nombre de las columnas
+```{r}
+str(Penguins)
+```
+
+
+# 4.- Tipo de variables
+```{r}
+colnames(Penguins)
+```
+
+
+# 5.- En busca de datos perdidos
+```{r}
+anyNA(Penguins)
+```
+
+
+
+#------------------------------------
+#  Configuracion de matriz
+#------------------------------------
+#1.- Convertir las variables categóticas a factores
+```{r}
+Penguins$especie<-factor(Penguins$especie, 
+                         levels=c("Adelie", "Gentoo", "Chinstrap"))
+```
+
+```{r}
+Penguins$isla<-factor(Penguins$isla, 
+                      levels=c("Torgersen", "Biscoe", "Dream"))
+```
+
+```{r}
+Penguins$genero<-factor(Penguins$genero, 
+                        levels=c("male", "female"))
+```
+
+```{r}
+Penguins$año<-factor(Penguins$año, 
+                     levels=c("2007", "2008", "2009"))
+```
+
+
+#------------------------------------
+#   Selección de variables
+#------------------------------------
+
+# 1.- se seleccionaran los datos de la especie gentoo
+# y se crea una nueva matriz llamada "gentoo"
+
+# Seleccion de la especie Gentoo
+```{r}
+Penguins$especie
+gentoo<-Penguins[153:176,c(4,5,6,7)]
+```
+
+
+#--------------------------------
+#   Grafico de dispersion
+#--------------------------------
+```{r}
+pairs(gentoo)
+```
+
+
+#-------------------------------------
+# Calculo de la correlacion de Pearson
+#-------------------------------------
+
+```{r}
+cor(gentoo)
+```
+
+
+#--------------------------
+#   grafico de dispersion con linea de regresion
+#-----------------------------
+
+```{r}
+MRL<-ggplot(gentoo, aes(x=masa_corporal_g, y=largo_pico_mm))+
+  geom_point()+
+  geom_smooth(method = "lm", formula=y~x, col="dodgerblue1")+
+  ggtitle("Modelo de Regresión Lineal Simple")+
+  xlab("Masa corporal (gr)")+
+  ylab("Largo del pico (mm)")+
+  theme_light()
+```
+
+```{r}
+MRL2<-ggplot(gentoo, aes(x=largo_aleta_mm, y=grosor_pico_mm))+
+  geom_point()+
+  geom_smooth(method = "lm", formula=y~x, col="darkviolet")+
+  ggtitle("Modelo de Regresión Lineal Simple")+
+  xlab("Masa corporal (gr)")+
+  ylab("Largo del pico (mm)")+
+  theme_light()
+```
+
+
+# 2.- Visualizacion del objeto
+```{r}
+MRL
+```
+
+```{r}
+MRL2
+```
+
+#------------------------------------
+#  Cálculo y representación de la recta
+# por mínimos cuadrados
+#-------------------------------------
+```{r}
+regresion<-lm(gentoo$largo_pico_mm~gentoo$masa_corporal_g, 
+              data=gentoo)
+```
+
+```{r}
+summary(regresion)
+```
+
+#-------------------------------------
+```{r}
+regresion2<-lm(gentoo$largo_aleta_mm~gentoo$grosor_pico_mm, 
+               data=gentoo)
+```
+
+```{r}
+summary(regresion2)
+```
+
+#-----------------------------------------------
+#   Coeficiente de Correlacion de Pearson (r)
+#-----------------------------------------------
+
+# Del largo del pico y la masa corporal
+
+```{r}
+r1<- sqrt(0.5456)
+```
+
+```{r}
+r1
+```
+# Del largo de la aleta y el grosor del pico
+
+```{r}
+r2<-sqrt(0.4805)
+```
+```{r}
+r2
+```
+
